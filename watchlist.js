@@ -1,12 +1,19 @@
 const results = document.getElementById("results")
 
-let number = 0
+let myWatchList = JSON.parse(localStorage.getItem("myWatchList"))
 
-function postData(imdbID) {
+function onClicked(Id) {
+    if (myWatchList.includes(Id)) {
+        myWatchList = myWatchList.filter((item) => item !== Id )
+    }
+    
+    getMovielist()
+    localStorage.setItem("myWatchList", JSON.stringify(myWatchList))
+}
+
+async function postData(imdbID) {
     const resp = await fetch(`https://www.omdbapi.com/?apikey=19e68f4b&i=${imdbID}`)
     const data = await resp.json()
-    console.log(imdbID)
-    console.log(data.imdbRating)
     
     results.innerHTML = `
             <div class="post">    
@@ -20,7 +27,7 @@ function postData(imdbID) {
                     <div class="info">
                         <p class="runtime">${data.Runtime}</p>
                         <p class="genre">${data.Genre}</p>
-                        <p class="watchlist"><img class="pluss" src="./img/Pluss-icon.svg" />Watchlist</p>
+                        <p class="watchlist" onClick="onClicked('${data.imdbID}')" ><img class="pluss" src="./img/Minus-icon.svg" />Watchlist</p>
                     </div>
                     <div class="plot">
                         <p>${data.Plot}
@@ -31,25 +38,17 @@ function postData(imdbID) {
         `
 }
 
-async function getMovielist(input) {
-    const resp = await fetch(`https://www.omdbapi.com/?apikey=19e68f4b&s=${input}&page=10`)
-    const data = await resp.json()
+function getMovielist() {
     
-    if (data.Response !== "False") {
-        console.log(data)
-
-        if (number === 0) {
-            results.innerHTML = ""
-        }
-        number++
-        console.log(data.Search.length)
-        for (let x=0; x<data.Search.length; x++) {
-            postData(data.Search[x].imdbID)
+    if (myWatchList.length === 0) {
+        results.innerHTML = '<h3 class="empty-list">Your watchlist is looking a little empty...</h3>'
+    } else {
+        results.innerHTML = ""
+    
+        for (let i=0; i<myWatchList.length; i++) {
+                postData(myWatchList[i])
         }
     }
 }
 
-button.addEventListener("click", (e) => {
-    e.preventDefault()
-    getMovielist(searchString.value)
-})
+getMovielist()

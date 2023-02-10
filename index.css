@@ -36,11 +36,7 @@ h2 {
 }
 
 h3 {
-    position: relative;
     margin: 0 auto;
-    top: 207px;
-    width: 321px;
-    height: 40px;
     font-weight: 700;
     font-size: 18px;
     line-height: 20px;
@@ -244,4 +240,15 @@ button {
 .plot > p {
     margin: 0;
     padding: 0;
+}
+
+.empty, .empty-list {
+    position: relative;
+    top: 207px;
+    width: 321px;
+    height: 40px;
+}
+
+.empty-list {
+    width: 400px;
 }
