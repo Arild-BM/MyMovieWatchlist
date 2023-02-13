@@ -2,7 +2,7 @@ const searchString = document.getElementById("search-string")
 const button = document.getElementById("button")
 const results = document.getElementById("results")
 
-let myWatchList = JSON.parse(localStorage.getItem("myWatchList"))
+let myWatchList = JSON.parse(localStorage.getItem("myWatchList")) || []
 
 function onClicked(Id) {
     
@@ -43,7 +43,7 @@ async function getMovielist(input) {
     const data = await resp.json()
     
     if (data.Response === "False") {
-        results.innerHTML = '<h3 class="empty">Unable to find what you are looking for. Please try another search.</h3>'
+        results.innerHTML = '<h3 class="empty">Unable to find what you’re looking for. Please try another search.</h3>'
     } else {
         results.innerHTML = ""
         for (let i=0; i<data.Search.length; i++) {
